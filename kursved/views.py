@@ -3,8 +3,7 @@ from django.views.decorators.http import require_POST
 from django.contrib.auth import authenticate, login, logout
 from .models import vedom
 from .models import stud 
-from .forms import LogForm
-
+from .forms import LogForm, StudForm
 
 def index (request):
     form = LogForm()
@@ -13,13 +12,10 @@ def index (request):
     
 def loggout (request):
     logout(request)
-    form = LogForm()
-    context = {'form' : form}
-    return render(request, 'kursved/index.html',context)
+    return redirect ('index')
     
 @require_POST
 def logg (request):
-    
     username = request.POST['login']
     password = request.POST['password']
     user = authenticate(username=username, password=password)
@@ -34,3 +30,18 @@ def logg (request):
             return redirect('index')
     else:
         return redirect('index')
+        
+def vedomid(request, ved_id):
+    studlist = stud.objects.order_by('id')
+    studlist = studlist.filter(id_vedom = ved_id)
+    formset = StudForm.form()
+    form = formset(queryset = studlist)
+    context = {'studlist' : studlist, 'form' : form}
+    return render(request, 'kursved/vedom.html', context)
+
+def save(request):
+    stform = StudForm.form()
+    form = stform(request.POST)
+    if form.is_valid():
+        form.save()
+    return redirect('index')
