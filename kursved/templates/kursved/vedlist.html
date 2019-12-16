@@ -1,0 +1,19 @@
+<!doctype  html>
+<html  lang="ru">
+<head>
+<link  rel="stylesheet"  href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"  integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"  crossorigin="anonymous">
+<title>Ведомости</title>
+</head>
+<body>
+  <div  class="container">
+	  <ul class="list-group">
+		{% for vedom in vedom_list %}
+		<a><li class="list-group-item">{{ vedom.name }}</li></a>
+		{% endfor %}
+	  </ul>
+	  <form action ="{% url 'loggout' %}">
+	  <button type= "submit" class="btn btn-primary">Выйти</button>
+      </div>
+  </div>
+</body>
+</html>
