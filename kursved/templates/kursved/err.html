@@ -6,14 +6,9 @@
 </head>
 <body>
   <div  class="container">
-	  <ul class="list-group">
-		{% for vedom in vedom_list %}
-		<a href="{% url 'vedomid' vedom.id %}"><li class="list-group-item">{{ vedom.name }}</li></a>
-		{% endfor %}
-	  </ul>
-	  <form action ="{% url 'loggout' %}">
-	  <button type= "submit" class="btn btn-primary">Выйти</button>
-	  </form>
+	  Что-то пошло не так, вернитесь на страницу авторизации.
+	  <form action ="{% url 'index' %}">
+	  <button type= "submit" class="btn btn-primary">Вернуться</button>
       </div>
   </div>
 </body>

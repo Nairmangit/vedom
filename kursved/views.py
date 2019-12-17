@@ -1,8 +1,7 @@
 from django.shortcuts import render, redirect
 from django.views.decorators.http import require_POST
 from django.contrib.auth import authenticate, login, logout
-from .models import vedom
-from .models import stud 
+from .models import vedom, stud, studtovedom
 from .forms import LogForm, StudForm
 
 def index (request):
@@ -22,17 +21,30 @@ def logg (request):
     if user is not None:
         if user.is_active:
             login(request, user)
-            vedom_list = vedom.objects.order_by('id')
-            vedom_list = vedom_list.filter(id_user = user)
-            context = {'vedom_list' : vedom_list}
-            return render(request, 'kursved/vedlist.html', context)
+            return redirect('vedomlist')
         else:
-            return redirect('index')
+            return redirect('err')
     else:
-        return redirect('index')
+        return redirect('err')
         
+def vedomlist(request):
+    if request.user.is_authenticated:
+        user = request.user
+        if user is not None:
+            if user.is_active:
+                vedom_list = vedom.objects.order_by('id')
+                vedom_list = vedom_list.filter(id_user = user)
+                context = {'vedom_list' : vedom_list}
+                return render(request, 'kursved/vedlist.html', context)
+            else:
+                return redirect('err')
+        else:
+            return redirect('err')
+    else:
+        return redirect('err')
+
 def vedomid(request, ved_id):
-    studlist = stud.objects.order_by('id')
+    studlist = studtovedom.objects.order_by('id')
     studlist = studlist.filter(id_vedom = ved_id)
     formset = StudForm.form()
     form = formset(queryset = studlist)
@@ -44,4 +56,9 @@ def save(request):
     form = stform(request.POST)
     if form.is_valid():
         form.save()
-    return redirect('index')
+    else:
+        return redirect('err')
+    return redirect('vedomlist')
+    
+def err(request):
+    return render(request, 'kursved/err.html')
