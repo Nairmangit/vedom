@@ -1,13 +1,17 @@
 from django.shortcuts import render, redirect
 from django.views.decorators.http import require_POST
 from django.contrib.auth import authenticate, login, logout
+from django.forms import modelformset_factory
 from .models import vedom, stud, studtovedom
 from .forms import LogForm, StudForm
 
 def index (request):
-    form = LogForm()
-    context = {'form' : form}
-    return render(request, 'kursved/index.html', context)
+    if request.user.is_authenticated:
+        return redirect('vedomlist')
+    else:
+        form = LogForm()
+        context = {'form' : form}
+        return render(request, 'kursved/index.html', context)
     
 def loggout (request):
     logout(request)
@@ -43,16 +47,22 @@ def vedomlist(request):
     else:
         return redirect('err')
 
-def vedomid(request, ved_id):
-    studlist = studtovedom.objects.order_by('id')
-    studlist = studlist.filter(id_vedom = ved_id)
-    formset = StudForm.form()
-    form = formset(queryset = studlist)
-    context = {'studlist' : studlist, 'form' : form}
-    return render(request, 'kursved/vedom.html', context)
+def vedomid(request, ved):
+    if request.user.is_authenticated:
+        studlist = studtovedom.objects.order_by('id')
+        studlist = studlist.filter(vedomname = ved)
+        formset = StudForm
+        #formset = modelformset_factory(studtovedom, form=StudForm, extra=0)
+        form = formset(queryset = studlist)
+        #for form in formset.forms:
+        #    form.fields['studname'].widget.attrs['readonly'] = True
+        context = {'formset' : form}
+        return render(request, 'kursved/vedom.html', context)
+    else:
+        return redirect('err')
 
 def save(request):
-    stform = StudForm.form()
+    stform = StudForm
     form = stform(request.POST)
     if form.is_valid():
         form.save()

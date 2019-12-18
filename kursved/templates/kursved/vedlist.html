@@ -10,10 +10,12 @@
 		{% for vedom in vedom_list %}
 		<a href="{% url 'vedomid' vedom.id %}"><li class="list-group-item">{{ vedom.name }}</li></a>
 		{% endfor %}
+		  <li class="list-group-item">
+			  <form action ="{% url 'loggout' %}">
+				<button type= "submit" class="btn btn-primary">Выйти</button>
+			  </form>
+		  </li>
 	  </ul>
-	  <form action ="{% url 'loggout' %}">
-	  <button type= "submit" class="btn btn-primary">Выйти</button>
-	  </form>
       </div>
   </div>
 </body>
