@@ -9,7 +9,7 @@ class vedom(models.Model):
     ]
     name = models.CharField(max_length=60)
     type = models.CharField(max_length=3, choices=Types)
-    id_user = models.ForeignKey(User, models.PROTECT)
+    userid = models.ForeignKey(User, models.PROTECT)
     
     def __str__(self):
         return self.name
@@ -20,8 +20,7 @@ class stud(models.Model):
     patronymic = models.CharField(max_length=40)
     
     def __str__(self):
-        qwe = self.name + ' ' + self.surname + ' ' + self.patronymic
-        return (qwe)
+        return (self.surname + ' ' + self.name + ' ' + self.patronymic)
         
 class studtovedom(models.Model):
     Value = [
@@ -35,7 +34,6 @@ class studtovedom(models.Model):
     vedomname = models.ForeignKey(vedom, models.PROTECT)
     studname = models.ForeignKey(stud, models.PROTECT)
     value = models.CharField(max_length=5, choices=Value)
-    
+	
     def __str__(self):
-        qwe = self.studname.name + ' ' + self.vedomname.name
-        return (qwe)
+        return (self.studname.name + ' ' + self.vedomname.name)
